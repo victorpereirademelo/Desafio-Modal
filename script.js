@@ -633,10 +633,9 @@ const renderizacaoDeTabela = (dados) => {
 };
 renderizacaoDeTabela(dados);
 
-const excluirPost = value => {
-    console.log(value);
-}
-
+// const excluirPost = value => {
+//     console.log(value);
+// }
 
 function filtrar() {
     const buscarGuia = document.getElementById('pesquisa').value;
