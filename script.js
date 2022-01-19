@@ -5,16 +5,17 @@ let dadosMutavel = [];
 fetch("https://jsonplaceholder.typicode.com/posts")
     .then(response => response.json())
     .then(dadosImutavel => {
-        localStorage.setItem("transactions", JSON.stringify(dadosImutavel));
+        // localStorage.setItem("transactions", JSON.stringify(dadosImutavel));
         //  const value = localStorage.getItem("transactions");
         //  const dadosImutavel = JSON.parse(value);
-        armazenarDados = dadosImutavel;
-        dadosMutavel = dadosImutavel;
 
         // dadosImutavel.forEach(dados => {
-        //     armazenarDados.push(dados)
-        //     dadosMutavel.push(dados);
-        // });
+            //     armazenarDados.push(dados)
+            //     dadosMutavel.push(dados);
+            // });
+
+        armazenarDados = dadosImutavel;
+        dadosMutavel = dadosImutavel;
 
         renderizacaoDeTabela(dadosImutavel);
     });
