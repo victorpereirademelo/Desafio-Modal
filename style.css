@@ -1,46 +1,46 @@
 /* @author victorpereirademelo */
 @charset "UTF-8";
 
-body{
+body {
     background-color: rgb(31, 31, 31);
 }
 
-#mini-container{
+#mini-container {
     margin: 50px auto;
     max-width: 1150px;
 }
 
-#ajustar{
+#ajustar {
     margin: 50px auto;
     max-width: 1150px;
 }
 
-#container{
+#container {
     margin: 10px;
 }
 
-.separar{
+.separar {
     margin: 5px;
 }
 
-.ellipsis{
+.ellipsis {
     max-width: 100px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.imagemPerfil{
+.imagemPerfil {
     width: 25px;
     border-radius: 20px;
     height: 25px;
 }
 
-.riscar{
+.riscar {
     text-decoration: line-through;
 }
 
-.container{
+.container {
     display: flex;
     justify-content: space-between;
 }
@@ -50,13 +50,13 @@ body{
     padding-right: 5px;
 }
 
-.logo{
+.logo {
     font-family:cursive;
     color: #008cff;
     padding-left: 10px;
     padding-top: 10px;
 }
 
-.adjust-remove{
-color: red;
+.adjust-remove {
+    color: red;
 }

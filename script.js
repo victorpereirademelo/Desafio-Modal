@@ -1,3 +1,4 @@
+//----------------------------------- @author victorpereirademelo ----------------------------------------//
 function dadosInicial() {
     axios("https://jsonplaceholder.typicode.com/posts")
         .then(json => {
