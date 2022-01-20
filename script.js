@@ -63,17 +63,15 @@ function editarPost(postId) {
         };
 
         const novoPost = dadosMutavel().map(post => {
-                if(post.id === obj.id){
-                    return obj;
-                }
-                return post;
+            if (post.id === obj.id) {
+                return obj;
+            }
+            return post;
         });
 
-        console.log(novoPost)
-
         localStorage.setItem("posts", JSON.stringify(novoPost));
-
-        renderizacaoDeTabela(dadosMutavel());
+        filtrar();
+        // renderizacaoDeTabela(dadosMutavel());
         postId = 0;
     });
 };
@@ -90,11 +88,11 @@ function excluirPost(id) {
         });
 
         localStorage.setItem("posts", JSON.stringify(deletarPost));
-        renderizacaoDeTabela(dadosMutavel());
+        filtrar();
+        // renderizacaoDeTabela(dadosMutavel());
         id = 0;
     });
 };
-
 //--------------------------------------------------------------------------------------------------------//
 function filtrar() {
     const buscarGuia = document.getElementById('pesquisa').value;
