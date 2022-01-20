@@ -1,24 +1,14 @@
-//-------------------------------------------------------------------------------------------------------//
-let armazenarDados = [];
-let dadosMutavel = [];
+function dadosInicial() {
+    axios("https://jsonplaceholder.typicode.com/posts")
+        .then(json => {
+            localStorage.setItem("posts", JSON.stringify(json.data));
+            renderizacaoDeTabela(json.data);
+        });
+};
 //--------------------------------------------------------------------------------------------------------//
-fetch("https://jsonplaceholder.typicode.com/posts")
-    .then(response => response.json())
-    .then(dadosImutavel => {
-        // localStorage.setItem("transactions", JSON.stringify(dadosImutavel));
-        //  const value = localStorage.getItem("transactions");
-        //  const dadosImutavel = JSON.parse(value);
-
-        // dadosImutavel.forEach(dados => {
-            //     armazenarDados.push(dados)
-            //     dadosMutavel.push(dados);
-            // });
-
-        armazenarDados = dadosImutavel;
-        dadosMutavel = dadosImutavel;
-
-        renderizacaoDeTabela(dadosImutavel);
-    });
+function dadosMutavel() {
+    return JSON.parse(localStorage.getItem("posts"));
+};
 //--------------------------------------------------------------------------------------------------------//
 function renderizacaoDeTabela(dados) {
 
@@ -51,41 +41,43 @@ function renderizacaoDeTabela(dados) {
     tabela.innerHTML = html;
 };
 //--------------------------------------------------------------------------------------------------------//
-function editarPost(id) {
+function editarPost(postId) {
     const botaoEditar = document.getElementById('botaoEditar');
     const titulo = document.getElementById('titulo');
     const descricao = document.getElementById('descricao');
 
-    let item = dadosMutavel.filter(dados => {
-        if (id === dados.id) {
-            return true;
-        }
-        return false;
-    });
+    const posts = dadosMutavel();
+    const postParaEditar = posts.find(post => postId === post.id);
 
-    console.log(item);
-
-    titulo.value = item[0].title;
-    descricao.value = item[0].body;
+    titulo.value = postParaEditar.title;
+    descricao.value = postParaEditar.body;
 
     botaoEditar.addEventListener('click', function () {
 
         $('#exampleModal1').modal('hide');
 
-        item.title = titulo.value;
-        item.body = descricao.value;
-        // console.log(dadosMutavel[id])
-        // console.log(item)
-        dadosMutavel[id-1] = item;
+        const obj = {
+            id: postId,
+            title: titulo.value,
+            body: descricao.value,
+        };
 
+        const novoPost = dadosMutavel().map(post => {
+                if(post.id === obj.id){
+                    return obj;
+                }
+                return post;
+        });
 
-        renderizacaoDeTabela(dadosMutavel);
-        item = [];
-        id = 0;
+        console.log(novoPost)
+
+        localStorage.setItem("posts", JSON.stringify(novoPost));
+
+        renderizacaoDeTabela(dadosMutavel());
+        postId = 0;
     });
-
 };
-
+//------------------------------------------------------------------------------------------------------//
 function excluirPost(id) {
     const botaoExcluir = document.getElementById('botaoExcluir');
 
@@ -93,11 +85,12 @@ function excluirPost(id) {
 
         $('#exampleModal2').modal('hide');
 
-        dadosMutavel = dadosMutavel.filter(dados => {
-            return (id !== dados.id);
+        const deletarPost = dadosMutavel().filter(dados => {
+            return id !== dados.id;
         });
 
-        renderizacaoDeTabela(dadosMutavel);
+        localStorage.setItem("posts", JSON.stringify(deletarPost));
+        renderizacaoDeTabela(dadosMutavel());
         id = 0;
     });
 };
@@ -108,10 +101,10 @@ function filtrar() {
     const buscaNormalizada = buscarGuia.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
     if (!buscaNormalizada) {
-        return renderizacaoDeTabela(dadosMutavel);
+        return renderizacaoDeTabela(dadosMutavel());
     }
 
-    const guiasFiltradas = dadosMutavel.filter(dado => {
+    const guiasFiltradas = dadosMutavel().filter(dado => {
         const titleNormalizado = dado.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
         if (buscaNormalizada && titleNormalizado.includes(buscaNormalizada)) {
@@ -120,14 +113,24 @@ function filtrar() {
 
         return false;
     });
+
     renderizacaoDeTabela(guiasFiltradas);
 };
 //--------------------------------------------------------------------------------------------------------//
 const botaoAtualizar = document.getElementById('botaoAtualizar');
+const pesquisa = document.getElementById('pesquisa');
 
 botaoAtualizar.addEventListener('click', function () {
-    const pesquisa = document.getElementById('pesquisa');
     pesquisa.value = '';
-    dadosMutavel = armazenarDados;
-    renderizacaoDeTabela(dadosMutavel);
+    dadosInicial();
 });
+//---------------------------------------------------------------------------------------------------------//
+function iniciarPagina() {
+    if (!dadosMutavel()) {
+        dadosInicial();
+    }
+    return renderizacaoDeTabela(dadosMutavel());
+};
+
+iniciarPagina();
+//----------------------------------------------------------------------------------------------------------//
