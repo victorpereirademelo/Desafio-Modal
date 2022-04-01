@@ -1,10 +1,16 @@
 //----------------------------------- @author victorpereirademelo ----------------------------------------//
+iniciarPagina();
+
 function dadosInicial() {
     axios("https://jsonplaceholder.typicode.com/posts")
         .then(json => {
-            localStorage.setItem("posts", JSON.stringify(json.data));
+            setDados(json.data);
             renderizacaoDeTabela(json.data);
         });
+};
+//---------------------------------------------------------------------------------------------------------//
+function setDados(json) {
+    return localStorage.setItem("posts", JSON.stringify(json));
 };
 //--------------------------------------------------------------------------------------------------------//
 function dadosMutavel() {
@@ -55,6 +61,16 @@ function editarPost(postId) {
 
     botaoEditar.addEventListener('click', function () {
 
+        if(!titulo.value){
+          alert('Titulo Invalido');
+          return;
+        }
+
+        if(!descricao.value){
+            alert('descricao invalida');
+            return;
+        }
+
         $('#exampleModal1').modal('hide');
 
         const obj = {
@@ -70,7 +86,7 @@ function editarPost(postId) {
             return post;
         });
 
-        localStorage.setItem("posts", JSON.stringify(novoPost));
+        setDados(novoPost);
         filtrar();
         // renderizacaoDeTabela(dadosMutavel());
         postId = 0;
@@ -85,10 +101,10 @@ function excluirPost(id) {
         $('#exampleModal2').modal('hide');
 
         const deletarPost = dadosMutavel().filter(dados => {
-            return id !== dados.id;
+            return id !== dados.id
         });
 
-        localStorage.setItem("posts", JSON.stringify(deletarPost));
+        setDados(deletarPost);
         filtrar();
         // renderizacaoDeTabela(dadosMutavel());
         id = 0;
@@ -98,19 +114,16 @@ function excluirPost(id) {
 function filtrar() {
     const buscarGuia = document.getElementById('pesquisa').value;
     const buscaNormalizada = buscarGuia.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    const dados = dadosMutavel();
 
     if (!buscaNormalizada) {
-        return renderizacaoDeTabela(dadosMutavel());
+        return renderizacaoDeTabela(dados);
     }
 
-    const guiasFiltradas = dadosMutavel().filter(dado => {
+    const guiasFiltradas = dados.filter(dado => {
         const titleNormalizado = dado.title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        if (buscaNormalizada && titleNormalizado.includes(buscaNormalizada)) {
-            return true;
-        }
-
-        return false;
+        return titleNormalizado.includes(buscaNormalizada);
     });
 
     renderizacaoDeTabela(guiasFiltradas);
@@ -120,16 +133,22 @@ const botaoAtualizar = document.getElementById('botaoAtualizar');
 const pesquisa = document.getElementById('pesquisa');
 
 botaoAtualizar.addEventListener('click', function () {
+    const spin = document.querySelector("#spinner");
+    spin.style.visibility = "visible"
+
     pesquisa.value = '';
     dadosInicial();
+
+    setTimeout(function () {
+        spin.style.visibility = "hidden"
+    }, 500)
 });
 //---------------------------------------------------------------------------------------------------------//
 function iniciarPagina() {
-    if (!dadosMutavel()) {
-        dadosInicial();
+    if(!dadosMutavel()){
+       dadosInicial();
+       return;
     }
-    return renderizacaoDeTabela(dadosMutavel());
+    renderizacaoDeTabela(dadosMutavel());
 };
-
-iniciarPagina();
 //----------------------------------------------------------------------------------------------------------//
